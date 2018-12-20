@@ -9,9 +9,11 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import pl.edu.agh.gg.projekt1615czw.application.production.ProductionNotApplicableException;
 import pl.edu.agh.gg.projekt1615czw.application.production.ProductionOne;
+import pl.edu.agh.gg.projekt1615czw.application.production.reference.ProductionOneReferenceNodeFinder;
 import pl.edu.agh.gg.projekt1615czw.domain.HyperNode;
-import pl.edu.agh.gg.projekt1615czw.domain.HyperNodeAttribute;
+import pl.edu.agh.gg.projekt1615czw.domain.HyperNodeLabel;
 import pl.edu.agh.gg.projekt1615czw.infrastructure.GraphAdapter;
 
 @Slf4j
@@ -32,12 +34,14 @@ public class Main {
 
     public void start() {
         // do stuff
+        log.info("Application started");
+
         Graph<HyperNode, DefaultEdge> graph = new DefaultUndirectedGraph<>(DefaultEdge.class);
-        graph.addVertex(new HyperNode(HyperNodeAttribute.S));
-        productionOne.applyProduction(graph);
+        graph.addVertex(new HyperNode(HyperNodeLabel.S));
+        HyperNode referenceNode = new ProductionOneReferenceNodeFinder().findProductionReferenceNode(graph)
+                .orElseThrow(ProductionNotApplicableException::new);
+        productionOne.applyProduction(graph, referenceNode);
         org.graphstream.graph.Graph graphstreamGraph = new GraphAdapter("Graph 1", graph);
         graphstreamGraph.display();
-
-        log.info("Application started");
     }
 }

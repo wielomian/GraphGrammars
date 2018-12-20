@@ -3,7 +3,7 @@ package pl.edu.agh.gg.projekt1615czw.application.production.reference;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 import pl.edu.agh.gg.projekt1615czw.domain.HyperNode;
-import pl.edu.agh.gg.projekt1615czw.domain.HyperNodeAttribute;
+import pl.edu.agh.gg.projekt1615czw.domain.HyperNodeLabel;
 import pl.edu.agh.gg.projekt1615czw.domain.HyperNodeType;
 
 import java.util.List;
@@ -16,7 +16,7 @@ public class ProductionOneReferenceNodeFinder implements ProductionReferenceNode
         List<HyperNode> matchingNodes = graph.vertexSet()
                 .stream()
                 .filter(node -> node.getType() == HyperNodeType.HYPER_EDGE)
-                .filter(node -> node.getAttributes().contains(HyperNodeAttribute.S))
+                .filter(node -> node.getAttributes().contains(HyperNodeLabel.S))
                 .filter(node -> graph.edgesOf(node).isEmpty())
                 .collect(Collectors.toList());
 
