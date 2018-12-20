@@ -5,5 +5,5 @@ import org.jgrapht.graph.DefaultEdge;
 import pl.edu.agh.gg.projekt1615czw.domain.HyperNode;
 
 public interface Production {
-    void applyProduction(Graph<HyperNode, DefaultEdge> graph) throws ProductionNotApplicableException;
+    void applyProduction(Graph<HyperNode, DefaultEdge> graph, HyperNode referenceHyperEdgeNode);
 }

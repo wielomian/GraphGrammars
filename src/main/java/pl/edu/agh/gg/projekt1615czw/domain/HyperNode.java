@@ -7,9 +7,11 @@ import java.util.Set;
 
 public class HyperNode {
     private final HyperNodeType type;
-    private final Set<HyperNodeAttribute> attributes = new HashSet<>();
+    private final Set<HyperNodeLabel> attributes = new HashSet<>();
     private final Point geom;
     private final Color color;
+    private int breakAttribute;
+    private Direction direction;
 
     public HyperNode(Color color, Point geom) {
         this.color = color;
@@ -17,11 +19,11 @@ public class HyperNode {
         this.type = HyperNodeType.VERTEX;
     }
 
-    public HyperNode(HyperNodeAttribute... hyperNodeAttributes) {
+    public HyperNode(HyperNodeLabel... hyperNodeLabels) {
         this.type = HyperNodeType.HYPER_EDGE;
         this.geom = null;
         this.color = null;
-        this.attributes.addAll(Arrays.asList(hyperNodeAttributes));
+        this.attributes.addAll(Arrays.asList(hyperNodeLabels));
     }
 
     public Point getGeom() {
@@ -36,7 +38,23 @@ public class HyperNode {
         return type;
     }
 
-    public Set<HyperNodeAttribute> getAttributes() {
+    public Set<HyperNodeLabel> getAttributes() {
         return attributes;
+    }
+
+    public int getBreakAttribute() {
+        return breakAttribute;
+    }
+
+    public void setBreakAttribute(int breakAttribute) {
+        this.breakAttribute = breakAttribute;
+    }
+
+    public Direction getDirection() {
+        return direction;
+    }
+
+    public void setDirection(Direction direction) {
+        this.direction = direction;
     }
 }

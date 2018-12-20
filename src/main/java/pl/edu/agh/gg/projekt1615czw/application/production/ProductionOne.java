@@ -8,13 +8,12 @@ import pl.edu.agh.gg.projekt1615czw.application.bitmap.BitmapProvider;
 import pl.edu.agh.gg.projekt1615czw.application.production.reference.ProductionOneReferenceNodeFinder;
 import pl.edu.agh.gg.projekt1615czw.application.production.reference.ProductionReferenceNodeFinder;
 import pl.edu.agh.gg.projekt1615czw.domain.HyperNode;
-import pl.edu.agh.gg.projekt1615czw.domain.HyperNodeAttribute;
+import pl.edu.agh.gg.projekt1615czw.domain.HyperNodeLabel;
 
 import java.awt.*;
 
 @Component
 public class ProductionOne implements Production {
-    private final ProductionReferenceNodeFinder productionReferenceNodeFinder = new ProductionOneReferenceNodeFinder();
     private final BitmapProvider bitmapProvider;
 
     @Autowired
@@ -23,13 +22,10 @@ public class ProductionOne implements Production {
     }
 
     @Override
-    public void applyProduction(Graph<HyperNode, DefaultEdge> graph) {
-        HyperNode referenceHyperEdgeNode = productionReferenceNodeFinder.findProductionReferenceNode(graph)
-                .orElseThrow(ProductionNotApplicableException::new);
-
+    public void applyProduction(Graph<HyperNode, DefaultEdge> graph, HyperNode referenceHyperEdgeNode) {
         referenceHyperEdgeNode.getAttributes().clear();
-        referenceHyperEdgeNode.getAttributes().add(HyperNodeAttribute.I);
-        referenceHyperEdgeNode.getAttributes().add(HyperNodeAttribute.BREAK_0);
+        referenceHyperEdgeNode.getAttributes().add(HyperNodeLabel.I);
+        referenceHyperEdgeNode.setBreakAttribute(0);
 
         // Add new vertices
         Point point1 = new Point(0, 0);
@@ -47,10 +43,10 @@ public class ProductionOne implements Production {
         graph.addVertex(node4);
 
         // Add new pseudo-nodes for hyper graph edges
-        HyperNode edgeNodeUp = new HyperNode(HyperNodeAttribute.B);
-        HyperNode edgeNodeDown = new HyperNode(HyperNodeAttribute.B);
-        HyperNode edgeNodeLeft = new HyperNode(HyperNodeAttribute.B);
-        HyperNode edgeNodeRight = new HyperNode(HyperNodeAttribute.B);
+        HyperNode edgeNodeUp = new HyperNode(HyperNodeLabel.B);
+        HyperNode edgeNodeDown = new HyperNode(HyperNodeLabel.B);
+        HyperNode edgeNodeLeft = new HyperNode(HyperNodeLabel.B);
+        HyperNode edgeNodeRight = new HyperNode(HyperNodeLabel.B);
 
         graph.addVertex(edgeNodeUp);
         graph.addVertex(edgeNodeDown);
