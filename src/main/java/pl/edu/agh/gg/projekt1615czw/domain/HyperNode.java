@@ -23,7 +23,13 @@ public class HyperNode {
         this.type = HyperNodeType.HYPER_EDGE;
         this.geom = null;
         this.color = null;
+        this.breakAttribute = 0;
         this.attributes.addAll(Arrays.asList(hyperNodeLabels));
+    }
+
+    public HyperNode(Direction direction, HyperNodeLabel... hyperNodeLabels) {
+        this(hyperNodeLabels);
+        this.direction = direction;
     }
 
     public Point getGeom() {
@@ -56,5 +62,17 @@ public class HyperNode {
 
     public void setDirection(Direction direction) {
         this.direction = direction;
+    }
+
+    @Override
+    public String toString() {
+        return "HyperNode{" +
+                "type=" + type +
+                ", attributes=" + attributes +
+                ", geom=" + geom +
+                ", color=" + color +
+                ", breakAttribute=" + breakAttribute +
+                ", direction=" + direction +
+                '}';
     }
 }
