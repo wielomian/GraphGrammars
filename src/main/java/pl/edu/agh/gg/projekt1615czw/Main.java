@@ -11,6 +11,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import pl.edu.agh.gg.projekt1615czw.application.production.ProductionNotApplicableException;
 import pl.edu.agh.gg.projekt1615czw.application.production.ProductionOne;
+import pl.edu.agh.gg.projekt1615czw.application.production.ProductionTwo;
+import pl.edu.agh.gg.projekt1615czw.application.production.exception.ProductionException;
 import pl.edu.agh.gg.projekt1615czw.application.production.reference.ProductionOneReferenceNodeFinder;
 import pl.edu.agh.gg.projekt1615czw.domain.HyperNode;
 import pl.edu.agh.gg.projekt1615czw.domain.HyperNodeLabel;
@@ -22,17 +24,19 @@ import pl.edu.agh.gg.projekt1615czw.infrastructure.GraphAdapter;
 @Configuration
 public class Main {
     private final ProductionOne productionOne;
+    private final ProductionTwo productionTwo;
 
     @Autowired
-    public Main(ProductionOne productionOne) {
+    public Main(ProductionOne productionOne, ProductionTwo productionTwo) {
         this.productionOne = productionOne;
+        this.productionTwo = productionTwo;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ProductionException {
         new AnnotationConfigApplicationContext(Main.class).getBean(Main.class).start();
     }
 
-    public void start() {
+    private void start() throws ProductionException {
         // do stuff
         log.info("Application started");
 
@@ -41,7 +45,17 @@ public class Main {
         HyperNode referenceNode = new ProductionOneReferenceNodeFinder().findProductionReferenceNode(graph)
                 .orElseThrow(ProductionNotApplicableException::new);
         productionOne.applyProduction(graph, referenceNode);
+        HyperNode iNode = findI(graph);
+        iNode.setBreakAttribute(1);
+        productionTwo.applyProduction(graph, iNode);
         org.graphstream.graph.Graph graphstreamGraph = new GraphAdapter("Graph 1", graph);
         graphstreamGraph.display();
+    }
+    private HyperNode findI(Graph<HyperNode, DefaultEdge> graph){
+        for (HyperNode node : graph.vertexSet()){
+            if (node.getAttributes().contains(HyperNodeLabel.I))
+                return node;
+        }
+        return null;
     }
 }

@@ -2,6 +2,9 @@ package pl.edu.agh.gg.projekt1615czw.application.production;
 
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import pl.edu.agh.gg.projekt1615czw.application.bitmap.BitmapProvider;
 import pl.edu.agh.gg.projekt1615czw.application.production.exception.ProductionException;
 import pl.edu.agh.gg.projekt1615czw.application.production.exception.production.two.HyperEdgeNotInGraphException;
 import pl.edu.agh.gg.projekt1615czw.application.production.exception.production.two.ProductionTwoException;
@@ -16,7 +19,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Component
 public class ProductionTwo implements Production {
+    private final BitmapProvider bitmapProvider;
+
+    @Autowired
+    public ProductionTwo(BitmapProvider bitmapProvider) {
+        this.bitmapProvider = bitmapProvider;
+    }
 
     private class ProductionTwoElementsOriented {
 
@@ -42,14 +52,13 @@ public class ProductionTwo implements Production {
                 }
             }).collect(Collectors.toList());
             //todo learn where point (0,0) is and adjust
+            //right now 0,0 - southWest
 
             this.southWestPoint = points.remove(0);
             this.southEastPoint = points.remove(0);
             this.northWestPoint = points.remove(0);
             this.northEastPoint = points.remove(0);
-
-            //todo test if the order is correct
-        }
+            }
 
         HyperNode findPointOnEdge(Graph<HyperNode, DefaultEdge> graph, DefaultEdge edge) {
             HyperNode source = graph.getEdgeSource(edge);
@@ -87,11 +96,11 @@ public class ProductionTwo implements Production {
         //todo throw this into helper
 
         Point middlePointCoordinates = new Point(
-                (int) Math.floor(elements.northWestPoint.getGeom().getX() + elements.northEastPoint.getGeom().getX() / 2),
-                (int) Math.floor(elements.northWestPoint.getGeom().getY() + elements.southWestPoint.getGeom().getY() / 2));
+                (int) Math.floor((elements.northWestPoint.getGeom().getX() + elements.northEastPoint.getGeom().getX()) / 2),
+                (int) Math.floor((elements.northWestPoint.getGeom().getY() + elements.southWestPoint.getGeom().getY()) / 2));
 
         //todo set rgb as true value from the bitmap [bitmap needed]
-        HyperNode middlePoint = new HyperNode(new Color(0, 0, 0), middlePointCoordinates);
+        HyperNode middlePoint = new HyperNode(bitmapProvider.getColorAt(middlePointCoordinates), middlePointCoordinates);
 
         if (!graph.removeVertex(referenceHyperEdgeNode)) {
             throw new HyperEdgeNotInGraphException(String.format("No HyperEdge %s in graph", referenceHyperEdgeNode.toString()));
