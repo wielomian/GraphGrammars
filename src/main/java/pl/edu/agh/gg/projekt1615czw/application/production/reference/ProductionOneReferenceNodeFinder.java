@@ -16,7 +16,7 @@ public class ProductionOneReferenceNodeFinder implements ProductionReferenceNode
         List<HyperNode> matchingNodes = graph.vertexSet()
                 .stream()
                 .filter(node -> node.getType() == HyperNodeType.HYPER_EDGE)
-                .filter(node -> node.getAttributes().contains(HyperNodeLabel.S))
+                .filter(node -> node.getLabel().equals(HyperNodeLabel.S))
                 .filter(node -> graph.edgesOf(node).isEmpty())
                 .collect(Collectors.toList());
 

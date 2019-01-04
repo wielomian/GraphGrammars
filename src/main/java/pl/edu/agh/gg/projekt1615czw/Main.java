@@ -18,6 +18,8 @@ import pl.edu.agh.gg.projekt1615czw.domain.HyperNode;
 import pl.edu.agh.gg.projekt1615czw.domain.HyperNodeLabel;
 import pl.edu.agh.gg.projekt1615czw.infrastructure.GraphAdapter;
 
+import java.util.stream.Collectors;
+
 @Slf4j
 @PropertySource(value = "classpath:/application.properties", ignoreResourceNotFound = true)
 @ComponentScan(basePackages = "pl.edu.agh.gg.projekt1615czw")
@@ -53,7 +55,7 @@ public class Main {
     }
     private HyperNode findI(Graph<HyperNode, DefaultEdge> graph){
         for (HyperNode node : graph.vertexSet()){
-            if (node.getAttributes().contains(HyperNodeLabel.I))
+            if (node.getLabel().equals(HyperNodeLabel.I))
                 return node;
         }
         return null;
