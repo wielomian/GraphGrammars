@@ -11,7 +11,7 @@ public class BitmapProvider {
     private final Dimension dimension;
 
     public BitmapProvider(String bitmapResourcePath) throws IOException {
-        URL url = getClass().getResource(bitmapResourcePath);
+        URL url = getClass().getClassLoader().getResource(bitmapResourcePath);
         this.image = ImageIO.read(url);
         this.dimension = new Dimension(image.getWidth(), image.getHeight());
     }
