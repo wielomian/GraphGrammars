@@ -3,6 +3,7 @@ package pl.edu.agh.gg.projekt1615czw.application.production;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import pl.edu.agh.gg.projekt1615czw.application.bitmap.BitmapProvider;
 import pl.edu.agh.gg.projekt1615czw.domain.Direction;
 import pl.edu.agh.gg.projekt1615czw.domain.HyperNode;
@@ -13,6 +14,7 @@ import pl.edu.agh.gg.projekt1615czw.helpers.HyperGraphHelper;
 import java.awt.*;
 import java.util.ArrayList;
 
+@Component
 public class Production4 implements Production {
 
     private final BitmapProvider bitmapProvider;
@@ -101,17 +103,17 @@ public class Production4 implements Production {
 
             boolean vertical;
             if (this.p5.getGeom().x == this.p7.getGeom().x) {
-                // orientation horizontal
+                // orientation vertical
                 if (this.p5.getGeom().y < this.p7.getGeom().y) {
                     swapP5P7();
                 }
-                vertical = false;
+                vertical = true;
             } else {
-                // orientation vertical
+                // orientation horizontal
                 if (this.p5.getGeom().x > this.p7.getGeom().x) {
                     swapP5P7();
                 }
-                vertical = true;
+                vertical = false;
             }
             findP6P8(graph, vertical);
             findP4HyperEdges(graph, vertical);
