@@ -64,14 +64,11 @@ public class GraphAdapter extends DefaultGraph {
 
     private Node addHyperEdgeNode(HyperNode hyperNode) {
         UUID uuid = UUID.randomUUID();
-        log.debug("Adding hyper edge node {} {}" + hyperNode.getAttributes(), uuid);
+        log.debug("Adding hyper edge node {} {}" + hyperNode.getLabel(), uuid);
         Node node = addNode(uuid.toString());
 
         // Style
-        String label = hyperNode.getAttributes()
-                .stream()
-                .map(Objects::toString)
-                .collect(Collectors.joining(", "));
+        String label = hyperNode.getLabel().toString();
         node.setAttribute("label", label);
 
         return node;
