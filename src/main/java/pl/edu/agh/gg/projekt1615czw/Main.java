@@ -72,7 +72,7 @@ public class Main {
     private List<HyperNode> findAllVertex(Graph<HyperNode, DefaultEdge> graph, HyperNodeLabel label){
         List<HyperNode> list=new ArrayList<HyperNode>();
         for (HyperNode node : graph.vertexSet()){
-            if (node.getAttributes().contains(label)) {
+            if (node.getLabel()==label) {
                 list.add(node);
             }
 
@@ -82,7 +82,7 @@ public class Main {
 
     private HyperNode findVertex(Graph<HyperNode, DefaultEdge> graph, HyperNodeLabel label){
         for (HyperNode node : graph.vertexSet()){
-            if (node.getAttributes().contains(label))
+            if (node.getLabel()==label)
 
                 return node;
         }
