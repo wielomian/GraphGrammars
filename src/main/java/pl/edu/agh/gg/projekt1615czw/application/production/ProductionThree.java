@@ -37,7 +37,7 @@ public class ProductionThree implements Production
     public void applyProduction(Graph<HyperNode, DefaultEdge> graph, HyperNode referenceHyperEdgeNode) throws ProductionException {
 
 
-        if (!referenceHyperEdgeNode.getAttributes().contains(HyperNodeLabel.B)) return;
+        if (referenceHyperEdgeNode.getLabel()!=(HyperNodeLabel.B)) return;
         Set<DefaultEdge> edges = graph.edgesOf(referenceHyperEdgeNode);
         List<HyperNode> points = edges.stream().map(e -> findPointOnEdge(graph, e)).collect(Collectors.toList());
 
@@ -45,9 +45,9 @@ public class ProductionThree implements Production
         HyperNode point2=points.remove(0);
 
         Set<DefaultEdge> edges1 = graph.edgesOf(point1);
-        List<HyperNode> points1 = edges1.stream().map(e -> findHyperEdgePointOnEdge(graph, e)).filter(s -> s.getAttributes().contains(HyperNodeLabel.I)).collect(Collectors.toList());
+        List<HyperNode> points1 = edges1.stream().map(e -> findHyperEdgePointOnEdge(graph, e)).filter(s -> s.getLabel()==(HyperNodeLabel.I)).collect(Collectors.toList());
         Set<DefaultEdge> edges2 = graph.edgesOf(point2);
-        List<HyperNode> points2 = edges2.stream().map(e -> findHyperEdgePointOnEdge(graph, e)).filter(s -> s.getAttributes().contains(HyperNodeLabel.I)).collect(Collectors.toList());
+        List<HyperNode> points2 = edges2.stream().map(e -> findHyperEdgePointOnEdge(graph, e)).filter(s -> s.getLabel()==(HyperNodeLabel.I)).collect(Collectors.toList());
 
 
         for(HyperNode p1 : points1) {

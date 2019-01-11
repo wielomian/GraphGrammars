@@ -9,15 +9,15 @@ import pl.edu.agh.gg.projekt1615czw.application.production.exception.ProductionE
 import pl.edu.agh.gg.projekt1615czw.application.production.exception.production.two.HyperEdgeNotInGraphException;
 import pl.edu.agh.gg.projekt1615czw.application.production.exception.production.two.ProductionTwoException;
 import pl.edu.agh.gg.projekt1615czw.domain.Direction;
+import pl.edu.agh.gg.projekt1615czw.domain.HyperCross;
 import pl.edu.agh.gg.projekt1615czw.domain.HyperNode;
 import pl.edu.agh.gg.projekt1615czw.domain.HyperNodeLabel;
+import pl.edu.agh.gg.projekt1615czw.helpers.HyperCrossOrienter;
+import pl.edu.agh.gg.projekt1615czw.helpers.MathHelper;
 
-import java.awt.Color;
 import java.awt.Point;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Component
 public class ProductionTwo implements Production {
@@ -28,55 +28,24 @@ public class ProductionTwo implements Production {
         this.bitmapProvider = bitmapProvider;
     }
 
-    private class ProductionTwoElementsOriented {
-
-        HyperNode hyperEdge;
-        HyperNode northWestPoint;
-        HyperNode northEastPoint;
-        HyperNode southWestPoint;
-        HyperNode southEastPoint;
-
-        ProductionTwoElementsOriented(Graph<HyperNode, DefaultEdge> graph, HyperNode referenceHyperEdgeNode) {
-            this.hyperEdge = referenceHyperEdgeNode;
-            Set<DefaultEdge> edges = graph.edgesOf(referenceHyperEdgeNode);
-            List<HyperNode> points = edges.stream().map(e -> findPointOnEdge(graph, e)).sorted((HyperNode o1, HyperNode o2) -> {
-                Point o1Point = o1.getGeom();
-                Point o2Point = o2.getGeom();
-
-                if (o1Point.getY() > o2Point.getY()) {
-                    return 1;
-                } else if (o1Point.getY() < o2Point.getY()) {
-                    return -1;
-                } else {
-                    return Double.compare(o1Point.getX(), o2Point.getX());
-                }
-            }).collect(Collectors.toList());
-            //todo learn where point (0,0) is and adjust
-            //right now 0,0 - southWest
-
-            this.southWestPoint = points.remove(0);
-            this.southEastPoint = points.remove(0);
-            this.northWestPoint = points.remove(0);
-            this.northEastPoint = points.remove(0);
-            }
-
-        HyperNode findPointOnEdge(Graph<HyperNode, DefaultEdge> graph, DefaultEdge edge) {
-            HyperNode source = graph.getEdgeSource(edge);
-            if (source.getGeom() != null) {
-                return source;
-            } else {
-                return graph.getEdgeTarget(edge);
-            }
-        }
-    }
-
     @Override
     public void applyProduction(Graph<HyperNode, DefaultEdge> graph, HyperNode referenceHyperEdgeNode) throws ProductionException {
+        //Check correctness
         if (referenceHyperEdgeNode.getBreakAttribute() != 1) {
             throw new ProductionTwoException(String.format("Break equals %d for HyperEdge %s", referenceHyperEdgeNode.getBreakAttribute(), referenceHyperEdgeNode.toString()));
         }
 
-        ProductionTwoElementsOriented elements = new ProductionTwoElementsOriented(graph, referenceHyperEdgeNode);
+        if (!referenceHyperEdgeNode.getLabel().equals(HyperNodeLabel.I)){
+            throw new ProductionTwoException(String.format("Referenced HyperEdge %s is labeled %s", referenceHyperEdgeNode.toString(), referenceHyperEdgeNode.getLabel().toString()));
+        }
+        Integer legs = graph.edgesOf(referenceHyperEdgeNode).size();
+
+        if ( legs != 4){
+            throw new ProductionTwoException(String.format("Referenced HyperEdge %s has %d legs", referenceHyperEdgeNode.toString(), legs));
+        }
+
+        //Create nodes
+        HyperCross elements = HyperCrossOrienter.orient(graph, referenceHyperEdgeNode);
         HyperNode northEastHyperEdge = new HyperNode(HyperNodeLabel.I);
         HyperNode northWestHyperEdge = new HyperNode(HyperNodeLabel.I);
         HyperNode southEastHyperEdge = new HyperNode(HyperNodeLabel.I);
@@ -92,14 +61,13 @@ public class ProductionTwo implements Production {
                 southEastHyperEdge, southWestHyperEdge,
                 northHyperEdge, southHyperEdge, eastHyperEdge, westHyperEdge);
 
-        //todo decide how do we round such cases
-        //todo throw this into helper
+        //Create middle point
 
-        Point middlePointCoordinates = new Point(
-                (int) Math.floor((elements.northWestPoint.getGeom().getX() + elements.northEastPoint.getGeom().getX()) / 2),
-                (int) Math.floor((elements.northWestPoint.getGeom().getY() + elements.southWestPoint.getGeom().getY()) / 2));
+        Point middlePointCoordinates = MathHelper.getMiddlePoint(
+                elements.northWestPoint.getGeom(),
+                elements.southWestPoint.getGeom(),
+                elements.northEastPoint.getGeom());
 
-        //todo set rgb as true value from the bitmap [bitmap needed]
         HyperNode middlePoint = new HyperNode(bitmapProvider.getColorAt(middlePointCoordinates), middlePointCoordinates);
 
         if (!graph.removeVertex(referenceHyperEdgeNode)) {

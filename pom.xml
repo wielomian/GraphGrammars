@@ -16,6 +16,7 @@
     </properties>
 
     <dependencies>
+
         <dependency>
             <groupId>org.graphstream</groupId>
             <artifactId>gs-core</artifactId>
