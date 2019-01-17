@@ -23,8 +23,7 @@ public class ProductionOne implements Production {
 
     @Override
     public void applyProduction(Graph<HyperNode, DefaultEdge> graph, HyperNode referenceHyperEdgeNode) {
-        referenceHyperEdgeNode.getAttributes().clear();
-        referenceHyperEdgeNode.getAttributes().add(HyperNodeLabel.I);
+        referenceHyperEdgeNode.setLabel(HyperNodeLabel.I);
         referenceHyperEdgeNode.setBreakAttribute(0);
 
         // Add new vertices

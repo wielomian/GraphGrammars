@@ -7,7 +7,7 @@ import java.util.Set;
 
 public class HyperNode {
     private final HyperNodeType type;
-    private final Set<HyperNodeLabel> attributes = new HashSet<>();
+    private HyperNodeLabel label;
     private final Point geom;
     private final Color color;
     private int breakAttribute;
@@ -17,13 +17,20 @@ public class HyperNode {
         this.color = color;
         this.geom = geom;
         this.type = HyperNodeType.VERTEX;
+        this.label = HyperNodeLabel.V;
     }
 
-    public HyperNode(HyperNodeLabel... hyperNodeLabels) {
+    public HyperNode(HyperNodeLabel hyperNodeLabel) {
         this.type = HyperNodeType.HYPER_EDGE;
         this.geom = null;
         this.color = null;
-        this.attributes.addAll(Arrays.asList(hyperNodeLabels));
+        this.breakAttribute = 0;
+        this.label = hyperNodeLabel;
+    }
+
+    public HyperNode(Direction direction, HyperNodeLabel hyperNodeLabel) {
+        this(hyperNodeLabel);
+        this.direction = direction;
     }
 
     public Point getGeom() {
@@ -38,8 +45,8 @@ public class HyperNode {
         return type;
     }
 
-    public Set<HyperNodeLabel> getAttributes() {
-        return attributes;
+    public HyperNodeLabel getLabel() {
+        return label;
     }
 
     public int getBreakAttribute() {
@@ -56,5 +63,19 @@ public class HyperNode {
 
     public void setDirection(Direction direction) {
         this.direction = direction;
+    }
+
+    public void setLabel(HyperNodeLabel label) { this.label = label; }
+
+    @Override
+    public String toString() {
+        return "HyperNode{" +
+                "type=" + type +
+                ", label=" + label +
+                ", geom=" + geom +
+                ", color=" + color +
+                ", breakAttribute=" + breakAttribute +
+                ", direction=" + direction +
+                '}';
     }
 }
