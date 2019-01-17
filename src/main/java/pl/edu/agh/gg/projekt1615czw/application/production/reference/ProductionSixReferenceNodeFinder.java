@@ -33,7 +33,7 @@ public class ProductionSixReferenceNodeFinder implements ProductionReferenceNode
                 .filter(node -> node.getLabel().equals(HyperNodeLabel.F))
                 .filter(node -> graph.edgesOf(node).size() <= 2)
                 .collect(Collectors.toList());
-
+/*
         graph.edgesOf(matchingNodes.get(0));
         for (HyperNode big : matchingNodes) {
             for (HyperNode small : matchingNodes2) {
@@ -47,8 +47,9 @@ public class ProductionSixReferenceNodeFinder implements ProductionReferenceNode
                 }
 
             }
-
         }
+
+*/
         return Optional.empty();
     }
 }
