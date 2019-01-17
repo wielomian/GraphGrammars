@@ -17,8 +17,8 @@ public class ProductionFiveReferenceNodeFinder implements ProductionReferenceNod
         List<HyperNode> matchingNodes = graph.vertexSet()
                 .stream()
                 .filter(node -> node.getType() == HyperNodeType.HYPER_EDGE)
-                .filter(node -> node.getAttributes().contains(HyperNodeLabel.I))
-                .filter(node -> graph.edgesOf(node).size() == 4)
+                .filter(node -> node.getLabel().equals(HyperNodeLabel.I))
+                .filter(node -> graph.edgesOf(node).size() <= 4)
                 .filter(node -> node.getBreakAttribute() == 0)
                 .collect(Collectors.toList());
 

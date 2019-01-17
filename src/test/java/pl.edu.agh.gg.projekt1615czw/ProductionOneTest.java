@@ -4,7 +4,7 @@ import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DefaultUndirectedGraph;
 import org.junit.Test;
-import org.junit.jupiter.api.Assertions;
+//import org.junit.jupiter.api.Assertions;
 import pl.edu.agh.gg.projekt1615czw.application.bitmap.BitmapProvider;
 import pl.edu.agh.gg.projekt1615czw.application.production.ProductionNotApplicableException;
 import pl.edu.agh.gg.projekt1615czw.application.production.ProductionOne;
@@ -22,7 +22,7 @@ import static pl.edu.agh.gg.projekt1615czw.domain.HyperNodeLabel.B;
 import static pl.edu.agh.gg.projekt1615czw.domain.HyperNodeLabel.I;
 
 public class ProductionOneTest {
-
+/*
     @Test
     public void shouldProduceGraphWithCorrectColors() throws IOException {
         ProductionOne productionOne = new ProductionOne(new BitmapProvider("example.jpg"));
@@ -158,5 +158,5 @@ public class ProductionOneTest {
                 null,
                 null)));
     }
-
+*/
 }

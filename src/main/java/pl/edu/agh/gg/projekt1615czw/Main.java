@@ -9,12 +9,10 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import pl.edu.agh.gg.projekt1615czw.application.production.ProductionNotApplicableException;
-import pl.edu.agh.gg.projekt1615czw.application.production.ProductionOne;
-import pl.edu.agh.gg.projekt1615czw.application.production.ProductionTwo;
-import pl.edu.agh.gg.projekt1615czw.application.production.ProductionThree;
+import pl.edu.agh.gg.projekt1615czw.application.production.*;
 
 import pl.edu.agh.gg.projekt1615czw.application.production.exception.ProductionException;
+import pl.edu.agh.gg.projekt1615czw.application.production.reference.ProductionFiveReferenceNodeFinder;
 import pl.edu.agh.gg.projekt1615czw.application.production.reference.ProductionOneReferenceNodeFinder;
 import pl.edu.agh.gg.projekt1615czw.domain.HyperNode;
 import pl.edu.agh.gg.projekt1615czw.domain.HyperNodeLabel;
@@ -33,12 +31,12 @@ import java.util.stream.Collectors;
 public class Main {
     private final ProductionOne productionOne;
     private final ProductionTwo productionTwo;
-    private final ProductionThree productionThree;
+    private final ProductionFive productionFive;
     @Autowired
-    public Main(ProductionOne productionOne, ProductionTwo productionTwo, ProductionThree productionThree) {
+    public Main(ProductionOne productionOne, ProductionTwo productionTwo, ProductionFive productionFive) {
         this.productionOne = productionOne;
         this.productionTwo = productionTwo;
-        this.productionThree = productionThree;
+        this.productionFive = productionFive;
 
     }
 
@@ -48,44 +46,35 @@ public class Main {
 
     private void start() throws ProductionException {
         // do stuff
-        log.info("Application started");
-
         Graph<HyperNode, DefaultEdge> graph = new DefaultUndirectedGraph<>(DefaultEdge.class);
+
+        productionFiveTest(graph);
+        org.graphstream.graph.Graph graphstreamGraph = new GraphAdapter("Graph 1", graph);
+        graphstreamGraph.display();
+    }
+
+    private void productionFiveTest(Graph<HyperNode, DefaultEdge> graph){
         graph.addVertex(new HyperNode(HyperNodeLabel.S));
         HyperNode referenceNode = new ProductionOneReferenceNodeFinder().findProductionReferenceNode(graph)
                 .orElseThrow(ProductionNotApplicableException::new);
         productionOne.applyProduction(graph, referenceNode);
+        referenceNode = new ProductionFiveReferenceNodeFinder().findProductionReferenceNode(graph)
+                .orElseThrow(ProductionNotApplicableException::new);
+        System.out.println("Reference node before P5 break = " + referenceNode.getBreakAttribute());
+        productionFive.applyProduction(graph, referenceNode);
+        System.out.println("Reference node after P5 break = " + referenceNode.getBreakAttribute());
 
-        HyperNode iNode = findVertex(graph, HyperNodeLabel.I);
-        iNode.setBreakAttribute(1);
-        productionTwo.applyProduction(graph, iNode);
-       HyperNode bNode = findVertex(graph, HyperNodeLabel.B);
-       productionThree.applyProduction(graph,bNode);
-        List<HyperNode> listB=findAllVertex(graph,HyperNodeLabel.B);
-        for(HyperNode B : listB){
-            productionThree.applyProduction(graph,B);
-        }
-
-        org.graphstream.graph.Graph graphstreamGraph = new GraphAdapter("Graph 1", graph);
-        graphstreamGraph.display();
-    }
-    private List<HyperNode> findAllVertex(Graph<HyperNode, DefaultEdge> graph, HyperNodeLabel label){
-        List<HyperNode> list=new ArrayList<HyperNode>();
-        for (HyperNode node : graph.vertexSet()){
-            if (node.getLabel()==label) {
-                list.add(node);
-            }
-
-        }
-        return list;
     }
 
-    private HyperNode findVertex(Graph<HyperNode, DefaultEdge> graph, HyperNodeLabel label){
-        for (HyperNode node : graph.vertexSet()){
-            if (node.getLabel()==label)
-
-                return node;
-        }
-        return null;
+    private void productionSixTest(Graph<HyperNode, DefaultEdge> graph){
+        graph.addVertex(new HyperNode(HyperNodeLabel.S));
+        HyperNode referenceNode = new ProductionOneReferenceNodeFinder().findProductionReferenceNode(graph)
+                .orElseThrow(ProductionNotApplicableException::new);
+        productionOne.applyProduction(graph, referenceNode);
+        referenceNode = new ProductionFiveReferenceNodeFinder().findProductionReferenceNode(graph)
+                .orElseThrow(ProductionNotApplicableException::new);
+        System.out.println("Reference node before P5 break = " + referenceNode.getBreakAttribute());
+        productionFive.applyProduction(graph, referenceNode);
+        System.out.println("Reference node after P5 break = " + referenceNode.getBreakAttribute());
     }
 }
